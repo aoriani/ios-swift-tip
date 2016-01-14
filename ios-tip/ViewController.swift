@@ -14,10 +14,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var tipSegControl: UISegmentedControl!
+    var tipController: TipController?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        tipController = TipController(amountEditor: amountField, tipLabel: tipLabel, totalLabel: totalLabel, tipSegControl: tipSegControl)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        tipController?.prepare()
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,7 +33,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onChange(sender: AnyObject) {
-        print("onChange called")
+        tipController?.update()
     }
 
 }
