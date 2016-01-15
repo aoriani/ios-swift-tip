@@ -16,9 +16,11 @@ class TipController {
         var representation: String
     }
     
-    let gratuities = [Gratuity(value: NSDecimalNumber(string: "0.15"), representation: "15%"),
+    static let gratuities = [Gratuity(value: NSDecimalNumber(string: "0.15"), representation: "15%"),
         Gratuity(value: NSDecimalNumber(string: "0.18"), representation: "18%"),
         Gratuity(value: NSDecimalNumber(string: "0.20"), representation: "20%")]
+    
+    static let gratuityUserDefaultsKey = "default_gratuity"
     
     let decimalRoundUp = NSDecimalNumberHandler(roundingMode: NSRoundingMode.RoundUp,
         scale: 2,
@@ -45,15 +47,32 @@ class TipController {
         currencyFormatter.maximumFractionDigits = 2
     }
     
+    static func setupTipSegControl(tipSegControl: UISegmentedControl) {
+        tipSegControl.removeAllSegments()
+        for i in 0..<TipController.gratuities.count {
+            tipSegControl.insertSegmentWithTitle(TipController.gratuities[i].representation, atIndex: i, animated: false)
+        }
+    }
+    
+    static func saveDefaultGratuity(index: Int) {
+        if (index >= 0 && index < TipController.gratuities.count) {
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.setInteger(index, forKey: TipController.gratuityUserDefaultsKey)
+            defaults.synchronize()
+        }
+    }
+    
+    static func restoreDefaulGratuity() -> Int {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        return defaults.integerForKey(TipController.gratuityUserDefaultsKey)
+    }
+    
     func prepare() {
         amountEditor.text = ""
         tipLabel.text = formatCurrency(NSDecimalNumber.zero())
         totalLabel.text = formatCurrency(NSDecimalNumber.zero())
-        tipSegControl.removeAllSegments()
-        for i in 0..<gratuities.count {
-            tipSegControl.insertSegmentWithTitle(gratuities[i].representation, atIndex: i, animated: false)
-        }
-        tipSegControl.selectedSegmentIndex = 0
+        TipController.setupTipSegControl(tipSegControl)
+        tipSegControl.selectedSegmentIndex = TipController.restoreDefaulGratuity()
     }
     
     func formatCurrency(num:NSDecimalNumber) -> String {
@@ -71,7 +90,7 @@ class TipController {
         var billAmount = NSDecimalNumber(string: amountEditor.text)
         billAmount = billAmount == NSDecimalNumber.notANumber() ? NSDecimalNumber.zero() : billAmount
         
-        let currentGratuity = gratuities[tipSegControl.selectedSegmentIndex].value
+        let currentGratuity = TipController.gratuities[tipSegControl.selectedSegmentIndex].value
         let tip = calculateTip(billAmount, gratuity: currentGratuity)
         
         tipLabel.text = formatCurrency(tip.tip)

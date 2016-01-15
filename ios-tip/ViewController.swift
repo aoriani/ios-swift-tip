@@ -16,7 +16,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipSegControl: UISegmentedControl!
     var tipController: TipController?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tipController = TipController(amountEditor: amountField, tipLabel: tipLabel, totalLabel: totalLabel, tipSegControl: tipSegControl)
@@ -25,6 +24,11 @@ class ViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         tipController?.prepare()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        amountField.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {
