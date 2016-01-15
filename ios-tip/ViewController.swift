@@ -19,25 +19,36 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tipController = TipController(amountEditor: amountField, tipLabel: tipLabel, totalLabel: totalLabel, tipSegControl: tipSegControl)
+        tipController?.restoreState()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "saveState",
+            name: UIApplicationWillResignActiveNotification,
+            object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        tipController?.prepare()
+        tipController?.restoreState()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         amountField.becomeFirstResponder()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func saveState() {
+        tipController?.saveState()
     }
 
     @IBAction func onChange(sender: AnyObject) {
-        tipController?.update()
+        tipController?.updateUI()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+            name: UIApplicationWillResignActiveNotification,
+            object: nil)
     }
 
 }

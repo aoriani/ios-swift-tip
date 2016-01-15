@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+/**
+ * Controls all the logic of the application including: 
+ *  - saving and restore state between restarts;
+ *  - controlling settings;
+ *  - doing the tip calculation.
+ */
 class TipController {
     
     struct Gratuity {
@@ -20,7 +26,11 @@ class TipController {
         Gratuity(value: NSDecimalNumber(string: "0.18"), representation: "18%"),
         Gratuity(value: NSDecimalNumber(string: "0.20"), representation: "20%")]
     
+    //Keys for saving state
     static let gratuityUserDefaultsKey = "default_gratuity"
+    static let ammountUserDefaultsKey = "default_amount"
+    static let timestampUserDefaultsKey = "default_tmstp"
+    static let tenMinutes = 10 * 60
     
     let decimalRoundUp = NSDecimalNumberHandler(roundingMode: NSRoundingMode.RoundUp,
         scale: 2,
@@ -31,6 +41,7 @@ class TipController {
     
     let currencyFormatter = NSNumberFormatter()
     
+    //UI Components
     var tipLabel: UILabel
     var totalLabel: UILabel
     var amountEditor: UITextField
@@ -55,7 +66,7 @@ class TipController {
     }
     
     static func saveDefaultGratuity(index: Int) {
-        if (index >= 0 && index < TipController.gratuities.count) {
+        if index >= 0 && index < TipController.gratuities.count {
             let defaults = NSUserDefaults.standardUserDefaults()
             defaults.setInteger(index, forKey: TipController.gratuityUserDefaultsKey)
             defaults.synchronize()
@@ -67,12 +78,28 @@ class TipController {
         return defaults.integerForKey(TipController.gratuityUserDefaultsKey)
     }
     
-    func prepare() {
+    func saveState() {
+        let now = Int(NSDate().timeIntervalSince1970)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setInteger(now, forKey: TipController.timestampUserDefaultsKey)
+        defaults.setObject(amountEditor.text, forKey: TipController.ammountUserDefaultsKey)
+        defaults.synchronize()
+    }
+    
+    func restoreState() {
         amountEditor.text = ""
-        tipLabel.text = formatCurrency(NSDecimalNumber.zero())
-        totalLabel.text = formatCurrency(NSDecimalNumber.zero())
+        
+        let now = Int(NSDate().timeIntervalSince1970)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let lastSaveTimestamp = defaults.integerForKey(TipController.timestampUserDefaultsKey)
+        if (lastSaveTimestamp - now) < TipController.tenMinutes {
+            if let ammount = defaults.stringForKey(TipController.ammountUserDefaultsKey){
+                amountEditor.text = ammount
+            }
+        }
         TipController.setupTipSegControl(tipSegControl)
         tipSegControl.selectedSegmentIndex = TipController.restoreDefaulGratuity()
+        updateUI()
     }
     
     func formatCurrency(num:NSDecimalNumber) -> String {
@@ -86,7 +113,7 @@ class TipController {
         return (tip, total)
     }
     
-    func update() {
+    func updateUI() {
         var billAmount = NSDecimalNumber(string: amountEditor.text)
         billAmount = billAmount == NSDecimalNumber.notANumber() ? NSDecimalNumber.zero() : billAmount
         

@@ -17,7 +17,7 @@
                BlueprintIdentifier = "991A63D71C4608F800F2ABCD"
                BuildableName = "ios-tip.app"
                BlueprintName = "ios-tip"
-               ReferencedContainer = "container:ios-tip.xcodeproj">
+               ReferencedContainer = "container:Tip.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "991A63EB1C4608F800F2ABCD"
                BuildableName = "ios-tipTests.xctest"
                BlueprintName = "ios-tipTests"
-               ReferencedContainer = "container:ios-tip.xcodeproj">
+               ReferencedContainer = "container:Tip.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "991A63F61C4608F800F2ABCD"
                BuildableName = "ios-tipUITests.xctest"
                BlueprintName = "ios-tipUITests"
-               ReferencedContainer = "container:ios-tip.xcodeproj">
+               ReferencedContainer = "container:Tip.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,7 +55,7 @@
             BlueprintIdentifier = "991A63D71C4608F800F2ABCD"
             BuildableName = "ios-tip.app"
             BlueprintName = "ios-tip"
-            ReferencedContainer = "container:ios-tip.xcodeproj">
+            ReferencedContainer = "container:Tip.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -78,7 +78,7 @@
             BlueprintIdentifier = "991A63D71C4608F800F2ABCD"
             BuildableName = "ios-tip.app"
             BlueprintName = "ios-tip"
-            ReferencedContainer = "container:ios-tip.xcodeproj">
+            ReferencedContainer = "container:Tip.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -97,7 +97,7 @@
             BlueprintIdentifier = "991A63D71C4608F800F2ABCD"
             BuildableName = "ios-tip.app"
             BlueprintName = "ios-tip"
-            ReferencedContainer = "container:ios-tip.xcodeproj">
+            ReferencedContainer = "container:Tip.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
