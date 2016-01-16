@@ -48,6 +48,11 @@ class ViewController: UIViewController {
         amountField.becomeFirstResponder()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveState()
+    }
+    
     func saveState() {
         tipController?.saveState()
     }
