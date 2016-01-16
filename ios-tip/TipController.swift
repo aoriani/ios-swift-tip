@@ -53,9 +53,7 @@ class TipController {
         self.totalLabel = totalLabel
         self.tipSegControl = tipSegControl
         
-        currencyFormatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
-        currencyFormatter.minimumFractionDigits = 2
-        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.numberStyle = .CurrencyStyle
     }
     
     static func setupTipSegControl(tipSegControl: UISegmentedControl) {
@@ -92,7 +90,7 @@ class TipController {
         let now = Int(NSDate().timeIntervalSince1970)
         let defaults = NSUserDefaults.standardUserDefaults()
         let lastSaveTimestamp = defaults.integerForKey(TipController.timestampUserDefaultsKey)
-        if (lastSaveTimestamp - now) < TipController.tenMinutes {
+        if (now - lastSaveTimestamp) < TipController.tenMinutes {
             if let ammount = defaults.stringForKey(TipController.ammountUserDefaultsKey){
                 amountEditor.text = ammount
             }

@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet var container: UIView!
+    @IBOutlet weak var resultContainer: UIView!
     @IBOutlet weak var amountField: UITextField!
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
@@ -18,11 +20,20 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tipController = TipController(amountEditor: amountField, tipLabel: tipLabel, totalLabel: totalLabel, tipSegControl: tipSegControl)
+        tipController = TipController(amountEditor: amountField,
+            tipLabel: tipLabel,
+            totalLabel: totalLabel,
+            tipSegControl: tipSegControl)
         tipController?.restoreState()
         
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "saveState",
+            name: UIApplicationWillResignActiveNotification,
+            object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self,
             name: UIApplicationWillResignActiveNotification,
             object: nil)
     }
@@ -41,14 +52,41 @@ class ViewController: UIViewController {
         tipController?.saveState()
     }
 
-    @IBAction func onChange(sender: AnyObject) {
+    @IBAction func onValueChange(sender: AnyObject) {
         tipController?.updateUI()
     }
     
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self,
-            name: UIApplicationWillResignActiveNotification,
-            object: nil)
+    @IBAction func onGratuityChange(sender: AnyObject) {
+        startAnimateGratuityChange()
+    }
+    
+    func startAnimateGratuityChange() {
+        resultContainer.alpha = 1
+        UIView.animateWithDuration(0.25,
+            delay: 0.0,
+            options: .CurveEaseIn,
+            animations: {
+                self.resultContainer.alpha = 0
+                self.resultContainer.center.x -= self.container.bounds.width
+            },
+            completion: {
+                finished in self.tipController?.updateUI()
+                self.finishAnimateGratuityChange()
+            })
+    }
+    
+    func finishAnimateGratuityChange() {
+        self.resultContainer.center.x += 2 * self.container.bounds.width
+        UIView.animateWithDuration(0.25,
+            delay: 0.0,
+            options: .CurveEaseOut,
+            animations: {
+                self.resultContainer.center.x -= self.container.bounds.width
+                self.resultContainer.alpha = 1
+            },
+            completion: {
+                finished in
+            })
     }
 
 }
